@@ -1,11 +1,56 @@
-from flask import Flask, url_for, request, render_template
+from flask import Flask, url_for, request, render_template, redirect
+
+from data import db_session
+from data.jobs import Jobs
+from data.users import User
+from login_form import LoginForm
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 
+@app.route('/')
 @app.route('/index/<title>')
-def index(title):
+def index(title="Миссия на марс"):
     return render_template('index.html', title=title)
+
+
+@app.route('/training/<prof>')
+def training(prof):
+    return render_template('training.html', prof=prof, title='Тренировки в полёте')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        return redirect('/')
+    return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.route('/answer')
+@app.route('/auto_snswer')
+def answer():
+    param = {"title": "Автоматический ответ",
+             "surname": "Watny",
+             "name": "Mark",
+             "education": "выше среднего",
+             "profession": "штурман марсохода",
+             "sex": "male",
+             "motivation": "Всегда мечтал застрять на Марсе!",
+             "ready": "True"}
+    return render_template("auto_answer.html", **param)
+
+
+@app.route('/list_prof/')
+@app.route('/list_prof/<prof>')
+def list_prof(prof='ol'):
+    professions = ['инженер-исследователь', 'пилот', 'строитель', 'экзобиолог', 'врач',
+                   'инженер по терраформированию', 'климатолог',
+                   'специалист по радиационной защите', 'астрогеолог', 'гляциолог',
+                   'инженер жизнеобеспечения', 'метеоролог', 'оператор марсохода', 'киберинженер',
+                   'штурман', 'пилот дронов']
+    return render_template('list_prof.html', prof=prof, title='Список', professions=professions)
 
 
 @app.route('/promotion')
@@ -187,6 +232,44 @@ def form_sample():
         print(request.form.get('accept'))
         return "<h1>Форма отправлена<h1>"
 
+def user_create():
+    session = db_session.create_session()
+    user = User(surname="Scott",
+                name="Ridley",
+                age="21",
+                position="captain",
+                speciality="research engineer",
+                address="module_1",
+                email="scott_chief@mars.org")
+    session.add(user)
+    user = User(surname="Harry",
+                name="Potter",
+                age="14",
+                position="mag",
+                speciality="engineer",
+                address="module_1",
+                email="Harry@mars.org")
+    session.add(user)
+    user = User(surname="John",
+                name="DSD",
+                age="67",
+                position="doctor",
+                speciality="med",
+                address="module_2",
+                email="med@mars.org")
+    session.add(user)
+    user = User(surname="Somebody",
+                name="Bds",
+                age="67",
+                position="Something",
+                speciality="some",
+                address="module_5",
+                email="some@mars.org")
+    session.add(user)
+    session.commit()
+
 
 if __name__ == '__main__':
+    db_session.global_init("db/blogs.db")
+    user_create()
     app.run(port=8080, host='127.0.0.1')

@@ -1,0 +1,14 @@
+h1 {
+    color : AA0000
+    }
+
+h2.avr {
+    background-image: url("/static/img/MARS.png");
+    background-repeat: no-repeat;
+    padding-left: 160px;
+    }
+
+h4 {
+    color : #AAAAAA;
+    padding-left: 20px
+    }

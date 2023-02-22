@@ -10,9 +10,12 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 
 @app.route('/')
-@app.route('/index/<title>')
-def index(title="Миссия на марс"):
-    return render_template('index.html', title=title)
+@app.route('/index/')
+def index(title="Журнал работ"):
+    session = db_session.create_session()
+    jobs = session.query(Jobs).all()
+
+    return render_template('index.html', title=title, jobs=jobs)
 
 
 @app.route('/training/<prof>')
@@ -287,5 +290,6 @@ def jobs_create():
 
 if __name__ == '__main__':
     db_session.global_init("db/blogs.db")
-    jobs_create()
+    # user_create()
+    # jobs_create()
     app.run(port=8080, host='127.0.0.1')

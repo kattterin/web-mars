@@ -232,6 +232,7 @@ def form_sample():
         print(request.form.get('accept'))
         return "<h1>Форма отправлена<h1>"
 
+
 def user_create():
     session = db_session.create_session()
     user = User(surname="Scott",
@@ -269,7 +270,22 @@ def user_create():
     session.commit()
 
 
+def jobs_create():
+    session = db_session.create_session()
+    job = Jobs(team_leader=1,
+               job="deployment of residential modules 1 and 2",
+               work_size=15,
+               collaborators='2, 3')
+    session.add(job)
+    job = Jobs(team_leader=3,
+               job="cleaning of residential modules 1 and 2",
+               work_size=10,
+               collaborators='6, 3')
+    session.add(job)
+    session.commit()
+
+
 if __name__ == '__main__':
     db_session.global_init("db/blogs.db")
-    user_create()
+    jobs_create()
     app.run(port=8080, host='127.0.0.1')

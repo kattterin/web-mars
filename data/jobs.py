@@ -1,7 +1,6 @@
 import datetime
 import sqlalchemy
 from sqlalchemy import orm
-from werkzeug.security import generate_password_hash, check_password_hash
 
 from .db_session import SqlAlchemyBase
 
@@ -24,3 +23,6 @@ class Jobs(SqlAlchemyBase):
     is_finished = sqlalchemy.Column(sqlalchemy.BOOLEAN, default=False)  # bool  признак завершения
 
     user = orm.relationship('User')
+
+    def __repr__(self):
+        return f"""id:{self.id}, job:{self.job}, start_date:{self.start_date}"""

@@ -17,11 +17,3 @@ class RegisterForm(FlaskForm):
     address = StringField('Адрес', validators=[DataRequired()])
 
     submit = SubmitField('Зарегестрироваться')
-
-    # (surname="Scott",
-    #      name="Ridley",
-    #      age="21",
-    #      position="captain",
-    #      speciality="research engineer",
-    #      address="module_1",
-    #      email="scott_chief@mars.org")

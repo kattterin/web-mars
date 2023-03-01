@@ -11,7 +11,7 @@ class Jobs(SqlAlchemyBase):
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
     team_leader = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))  # руководителя, целое число
-    job = sqlalchemy.Column(sqlalchemy.String)  # description описание работы
+    job = sqlalchemy.Column(sqlalchemy.String, nullable=True)  # description описание работы
     work_size = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)  # hours объем работы в часах
 
     collaborators = sqlalchemy.Column(sqlalchemy.String,  # list of id of participants cписок id участников

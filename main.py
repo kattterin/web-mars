@@ -5,6 +5,7 @@ from data import db_session
 from data.jobs import Jobs
 from data.users import User
 from data.departments import Department
+from forms.job import JobForm
 
 from forms.login_form import LoginForm
 from forms.user import RegisterForm
@@ -34,6 +35,32 @@ def login():
                                message="Неправильный логин или пароль",
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
+
+
+@login_required
+@app.route('/addjob', methods=['GET', 'POST'])
+def addjob():
+    form = JobForm()
+    db_sess = db_session.create_session()
+    users = db_sess.query(User).all()
+    form.team_leader.choices = [(i.id, i.name) for i in users]
+    if form.validate_on_submit():
+        job = Jobs(
+            job=form.job.data,
+            work_size=form.work_size.data,
+            team_leader=form.team_leader.data,
+            is_finished=form.is_finished.data)
+        if form.collaborators.data:
+            job.collaborators = form.collaborators.data
+        if form.start_date.data:
+            job.start_date = form.start_date.data
+        if form.end_date.data:
+            job.end_date = form.end_date.data
+
+        db_sess.add(job)
+        db_sess.commit()
+        return redirect('/')
+    return render_template('jobs.html', title='Добавление работы', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])

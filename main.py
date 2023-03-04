@@ -1,7 +1,7 @@
-from flask import Flask, url_for, request, render_template, redirect
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask import Flask, url_for, request, render_template, redirect, abort, make_response, jsonify
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
-from data import db_session
+from data import db_session, jobs_api
 from data.jobs import Jobs
 from data.users import User
 from data.departments import Department
@@ -61,6 +61,57 @@ def addjob():
         db_sess.commit()
         return redirect('/')
     return render_template('jobs.html', title='Добавление работы', form=form)
+
+
+@app.route('/jobs/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_jobs(id):
+    form = JobForm()
+
+    db_sess = db_session.create_session()
+    users = db_sess.query(User).all()
+    form.team_leader.choices = [(i.id, i.name) for i in users]
+    # form.category.choices = categories
+    if request.method == "GET":
+        jobs = db_sess.query(Jobs).filter(Jobs.id == id,
+                                          Jobs.user == current_user
+                                          ).first()
+        if jobs:
+            form.job.data = jobs.job
+            form.work_size.data = jobs.work_size
+            form.team_leader.data = jobs.team_leader
+            form.is_finished.data = jobs.is_finished
+            if form.collaborators.data:
+                form.collaborators.data = jobs.collaborators
+            if form.start_date.data:
+                form.start_date.data = jobs.start_date
+            if form.end_date.data:
+                form.end_date.data = jobs.end_date
+        else:
+            abort(404)
+    if form.validate_on_submit():
+        jobs = db_sess.query(Jobs).filter(Jobs.id == id,
+                                          Jobs.user == current_user
+                                          ).first()
+        if jobs:
+            jobs.job = form.job.data
+            jobs.work_size = form.work_size.data
+            jobs.team_leader = form.team_leader.data
+            jobs.is_finished = form.is_finished.data
+            if form.collaborators.data:
+                jobs.collaborators = form.collaborators.data
+            if form.start_date.data:
+                jobs.start_date = form.start_date.data
+            if form.end_date.data:
+                jobs.end_date = form.end_date.data
+            db_sess.commit()
+            return redirect('/')
+        else:
+            abort(404)
+    return render_template('jobs.html',
+                           title='Редактирование работы',
+                           form=form
+                           )
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -361,18 +412,32 @@ def jobs_create():
     job = Jobs(team_leader=1,
                job="deployment of residential modules 1 and 2",
                work_size=15,
+               creator=1,
                collaborators='2, 3')
     session.add(job)
     job = Jobs(team_leader=3,
                job="cleaning of residential modules 1 and 2",
                work_size=10,
+               creator=1,
                collaborators='6, 3')
     session.add(job)
     session.commit()
 
 
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+
+@app.errorhandler(400)
+def bad_request(_):
+    return make_response(jsonify({'error': 'Bad Request'}), 400)
+
+
 if __name__ == '__main__':
     db_session.global_init("db/blogs.db")
+    app.register_blueprint(jobs_api.blueprint)
+
     # user_create()
     # jobs_create()
     app.run(port=8080, host='127.0.0.1')

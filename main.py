@@ -423,7 +423,7 @@ def load_image():
                             integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
                             crossorigin="anonymous">
                             <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
-                            <title>Отбор астронавтов</title>
+                            <title>Загрузка фотографии</title>
                           </head>
                           <body>
                           <div class="container">
@@ -485,6 +485,70 @@ def load_image():
                             </div>
                                   </body>
                                 </html>"""
+
+
+@app.route('/carousel', methods=['POST', 'GET'])
+def carousel():
+    if request.method == 'GET':
+        if request.method == 'GET':
+            return '''<!doctype html>
+                            <html lang="en">
+                              <head>
+                                <meta charset="utf-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                                <link rel="stylesheet"
+                                href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+                                integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+                                crossorigin="anonymous">
+                                <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
+                                <title>Пейзажи марса</title>
+                              </head>
+                              <body>
+                              <div class="container">
+                                <div class="row">
+                                <div align="center">
+                                        <h1 align="center">Пейзажи марса</h1>
+                                        <div id="carousel" class="carousel slide carousel-fade" data-ride="carousel">
+                                          <!-- Индикаторы -->
+                                          <ol class="carousel-indicators">
+                                            <li data-target="#carousel" data-slide-to="0" class="active"></li>
+                                            <li data-target="#carousel" data-slide-to="1"></li>
+                                            <li data-target="#carousel" data-slide-to="2"></li>
+                                          </ol>
+                                          <div class="carousel-inner">
+                                            <div class="carousel-item active">
+                                              <img class="img-fluid" src="../static/img/mars1.jpg" alt="..." width="90%">
+                                            </div>
+                                            <div class="carousel-item">
+                                              <img class="img-fluid" src="../static/img/mars2.jpg" alt="..." width="90%">
+                                            </div>
+                                            <div class="carousel-item">
+                                                <img class="img-fluid" src="../static/img/mars3.jpg" alt="..." width="90%">
+                                            </div>
+                                          </div>
+                                          <!-- Элементы управления -->
+                                          <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Предыдущий</span>
+                                          </a>
+                                          <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Следующий</span>
+                                          </a>
+                                </div>
+                                </div>
+                                </div>
+                            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+                                    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+                                    crossorigin="anonymous"></script>
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+                                    integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+                                    crossorigin="anonymous"></script>
+                            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+                                    integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+                                    crossorigin="anonymous"></script>
+                              </body>
+                            </html>'''
 
 
 def user_create():

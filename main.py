@@ -6,7 +6,8 @@ from data.jobs import Jobs
 from data.users import User
 from data.departments import Department
 from forms.job import JobForm
-
+from base64 import b64encode
+from io import BytesIO
 from forms.login_form import LoginForm
 from forms.user import RegisterForm
 from flask_restful import reqparse, abort, Api, Resource
@@ -268,7 +269,7 @@ def promotion_image():
 
 
 @app.route('/astronaut_selection', methods=['POST', 'GET'])
-def form_sample():
+def astronaut_selection():
     if request.method == 'GET':
         return f'''<!doctype html>
                         <html lang="en">
@@ -312,7 +313,7 @@ def form_sample():
                                         </div>
                                         
                                             <div>
-                                          <input type="checkbox" id="in-builder" name="pilot">
+                                          <input type="checkbox" id="in-builder" name="in-builder">
                                           <label for="in-builder">Инженер-строитель</label>
                                         </div>
                                         
@@ -322,12 +323,12 @@ def form_sample():
                                         </div>
                                         
                                             <div>
-                                          <input type="checkbox" id="in_provide" name="pilot">
+                                          <input type="checkbox" id="in_provide" name="in_provide">
                                           <label for="in_provide">Инженер по жизнеобеспечению</label>
                                         </div>
                                         
                                         <div>
-                                          <input type="checkbox" id="meteor" name="pilot">
+                                          <input type="checkbox" id="meteor" name="meteor">
                                           <label for="meteor">Метеоролог</label>
                                         </div>
 
@@ -342,7 +343,7 @@ def form_sample():
                                         </div>
 
                                         <div>
-                                          <input type="checkbox" id="in_def" name="builder">
+                                          <input type="checkbox" id="in_def" name="in_def">
                                           <label for="in_def">Инженер по радиационной защите</label>
                                         </div>
 
@@ -394,16 +395,96 @@ def form_sample():
         print(request.form.get('email'))
         print(request.form.get('education'))
         print(request.form.get('in-is', 'off'))
+        print(request.form.get('in-builder', 'off'))
         print(request.form.get('pilot', 'off'))
+        print(request.form.get('in_provide', 'off'))
+        print(request.form.get('meteor', 'off'))
         print(request.form.get('climat', 'off'))
         print(request.form.get('doctor', 'off'))
-        print(request.form.get('builder', 'off'))
+        print(request.form.get('in_def', 'off'))
         print(request.form.get('exobio', 'off'))
         print(request.form.get('sex'))
         print(request.form.get('quest'))
         print(request.form.get('file'))
         print(request.form.get('accept'))
         return "<h1>Форма отправлена<h1>"
+
+
+@app.route('/load_image', methods=['POST', 'GET'])
+def load_image():
+    if request.method == 'GET':
+        return '''<!doctype html>
+                        <html lang="en">
+                          <head>
+                            <meta charset="utf-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                            <link rel="stylesheet"
+                            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+                            integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+                            crossorigin="anonymous">
+                            <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
+                            <title>Отбор астронавтов</title>
+                          </head>
+                          <body>
+                          <div class="container">
+                            <div class="row">
+                            <div class="col-md-6 col-md-offset-3">
+                                    <h1 align="center">Загрузка фотографии</h1>
+                                    <h2 align="center">для участи в миссии</h2>
+                                    <div>
+                                        <form class="img_form" form method="post" enctype="multipart/form-data">
+                                            <div class="form-group">
+                                                <label for="photo">Приложите фотографию</label>
+                                                <input type="file" class="form-control-file" id="photo" name="image">
+                                            </div>
+                                            <br>
+                                            <button type="submit" class="btn btn-primary">Отправить</button>
+                                         </form>
+                                    </div>
+                            </div>
+                            </div>
+                            </div>
+
+                          </body>
+                        </html>'''
+
+    if request.method == 'POST':
+        image = BytesIO(request.files['image'].read())
+        image = image.getvalue()
+        image = b64encode(image).decode('utf-8')
+        return f"""<!doctype html>
+                                <html lang="en">
+                                  <head>
+                                    <meta charset="utf-8">
+                                    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+                                    <link rel="stylesheet" type="text/css" href="static/css/style.css" />
+                                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+                                    <title>Загрузка фотографии</title>
+                                  </head>
+                                  <body>
+                                                            <div class="container">
+                            <div class="row">
+                            <div class="col-md-6 col-md-offset-3">
+                                    <h1 align="center">Загрузка фотографии</h1>
+                                    <h2 align="center">для участи в миссии</h2>
+                                    <div>
+                                        <form class="img_form" method="post" enctype="multipart/form-data">
+                                            <div class="form-group">
+                                                <label for="photo">Приложите фотографию</label>
+                                                <input type="file" class="form-control-file" id="photo" name="img">
+                                            </div>
+                                            <br>
+                                            <img src="data:image/jpeg;base64,{image}"/>
+                                            <br>
+                                            <button type="submit" class="btn btn-primary">Отправить</button>
+                                         </form>
+                                    </div>
+                                     </div>
+                            </div>
+                            </div>
+                                  </body>
+                                </html>"""
 
 
 def user_create():

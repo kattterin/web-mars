@@ -1,7 +1,7 @@
 from flask import Flask, url_for, request, render_template, redirect, abort, make_response, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
-from data import db_session, jobs_api
+from data import db_session, jobs_api, users_resource
 from data.jobs import Jobs
 from data.users import User
 from data.departments import Department
@@ -9,11 +9,25 @@ from forms.job import JobForm
 
 from forms.login_form import LoginForm
 from forms.user import RegisterForm
+from flask_restful import reqparse, abort, Api, Resource
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+api = Api(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({"error": "not found"}))
+
+
+# для списка объектов
+api.add_resource(users_resource.UsersListResource, '/api/v2/users')
+
+# для одного объекта
+api.add_resource(users_resource.UsersResource, '/api/v2/users/<int:users_id>')
 
 
 @login_manager.user_loader
@@ -253,7 +267,7 @@ def promotion_image():
                     </html>"""
 
 
-@app.route('/form_sample', methods=['POST', 'GET'])
+@app.route('/astronaut_selection', methods=['POST', 'GET'])
 def form_sample():
     if request.method == 'GET':
         return f'''<!doctype html>
@@ -269,6 +283,9 @@ def form_sample():
                             <title>Отбор астронавтов</title>
                           </head>
                           <body>
+                          <div class="container">
+                            <div class="row">
+                            <div class="col-md-6 col-md-offset-3">
                             <h1 align="center">Анкета претендента</h1>
                             <h2 align="center">на участие в миссии</h2>
                             <div>
@@ -288,15 +305,30 @@ def form_sample():
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="professionSelect">Какие у Вас профессии</label>
+                                        <label for="professionSelect">Какие у Вас есть профессии?</label>
                                         <div>
                                             <input type="checkbox" id="in-is" name="in-is" checked>
                                             <label for="in-is">Инженер-исследователь</label>
                                         </div>
-
-                                        <div>
+                                        
+                                            <div>
+                                          <input type="checkbox" id="in-builder" name="pilot">
+                                          <label for="in-builder">Инженер-строитель</label>
+                                        </div>
+                                        
+                                            <div>
                                           <input type="checkbox" id="pilot" name="pilot">
                                           <label for="pilot">Пилот</label>
+                                        </div>
+                                        
+                                            <div>
+                                          <input type="checkbox" id="in_provide" name="pilot">
+                                          <label for="in_provide">Инженер по жизнеобеспечению</label>
+                                        </div>
+                                        
+                                        <div>
+                                          <input type="checkbox" id="meteor" name="pilot">
+                                          <label for="meteor">Метеоролог</label>
                                         </div>
 
                                         <div>
@@ -310,8 +342,8 @@ def form_sample():
                                         </div>
 
                                         <div>
-                                          <input type="checkbox" id="builder" name="builder">
-                                          <label for="builder">Строитель</label>
+                                          <input type="checkbox" id="in_def" name="builder">
+                                          <label for="in_def">Инженер по радиационной защите</label>
                                         </div>
 
                                         <div>
@@ -350,6 +382,10 @@ def form_sample():
                                     <button type="submit" class="btn btn-primary">Записаться</button>
                                 </form>
                             </div>
+                            </div>
+                            </div>
+                            </div>
+
                           </body>
                         </html>'''
     elif request.method == 'POST':
@@ -424,18 +460,8 @@ def jobs_create():
     session.commit()
 
 
-@app.errorhandler(404)
-def not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
-
-
-@app.errorhandler(400)
-def bad_request(_):
-    return make_response(jsonify({'error': 'Bad Request'}), 400)
-
-
 if __name__ == '__main__':
-    db_session.global_init("db/blogs.db")
+    db_session.global_init("db/blogs.sqlite3")
     app.register_blueprint(jobs_api.blueprint)
 
     # user_create()

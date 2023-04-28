@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 class="text-center mb-5">Оформление каюты</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <table class="table">
+                <tr>
+                    <td style="width: 50%">Цвет стен:</td>
+                    <td style="width: 50%">Эмблема</td>
+                </tr>
+                <tr>
+                    {% if gender == 'female' and age >= 21 %}
+                    <td style="background-color: red;"></td>
+                    <td><img src="/static/img/old.png" alt="Взрослый марсианин" class="img-fluid"></td>
+
+                    {% elif gender == 'female' and age < 21 %}
+                    <td style="background-color: lightcoral;"></td>
+                    <td><img src="/static/img/child.jpg" alt="Ребенок-марсианин" class="img-fluid"></td>
+                    {% elif gender == 'male' and age >= 21 %}
+                    <td style="background-color: blue;"></td>
+                    <td><img src="/static/img/old.png" alt="Взрослый марсианин" class="img-fluid"></td>
+
+                    {% elif gender == 'male' and age < 21 %}
+                    <td style="background-color: lightblue;"></td>
+                    <td><img src="/static/img/child.jpg" alt="Ребенок-марсианин" class="img-fluid"></td>
+                    {% endif %}
+
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

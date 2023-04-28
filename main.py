@@ -31,10 +31,21 @@ api.add_resource(users_resource.UsersListResource, '/api/v2/users')
 api.add_resource(users_resource.UsersResource, '/api/v2/users/<int:users_id>')
 
 
+@app.route('/distribution')
+def distribution():
+    astronauts = ['Ридли Скотт', 'Энди Уир', 'Марк Уотни', 'Венката Капур', 'Тедди Сандерс', 'Шон Бин']
+    return render_template("distribution.html", title='каюты', astronauts=astronauts)
+
+
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
+
+
+@app.route('/table/<gender>/<int:age>')
+def table(gender, age):
+    return render_template("table.html", gender=gender, age=age, title="Цвет каюты")
 
 
 @app.route('/login', methods=['GET', 'POST'])

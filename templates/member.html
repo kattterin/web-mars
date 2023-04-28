@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% set astr = members['member_' + ('1', '2', '3') | random] %}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2>{{ astr['name'] + ' ' + astr['surname'] }}</h2>
+            <img src="{{ astr['image'] }}" alt="Здесь должна быть фотография, но ее нет">
+            <p>
+                {% for i in astr['specialties']|sort %}
+                {% if not loop.last %}
+                {{i}},
+
+                {% else %}
+                {{i}}.
+                {% endif %}
+                {% endfor %}</p>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

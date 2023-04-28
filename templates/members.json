@@ -1,0 +1,20 @@
+{
+  "member_1": {
+    "name": "Ридли",
+    "surname": "Скотт",
+    "image": "static/img/child.jpg",
+    "specialties": ["инженер-строитель"]
+  },
+  "member_2": {
+    "name": "Энди",
+    "surname": "Уир",
+    "image": "static/img/old.png",
+    "specialties": ["метеоролог", "климатолог"]
+  },
+  "member_3": {
+    "name": "Марк",
+    "surname": "Уотни",
+    "image": "static/img/child.jpg",
+    "specialties": ["пилот", "врач", "инженер по радиационной защите"]
+  }
+}

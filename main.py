@@ -1,3 +1,5 @@
+import json
+
 from flask import Flask, url_for, request, render_template, redirect, abort, make_response, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
@@ -30,8 +32,16 @@ api.add_resource(users_resource.UsersListResource, '/api/v2/users')
 # для одного объекта
 api.add_resource(users_resource.UsersResource, '/api/v2/users/<int:users_id>')
 
+
+@app.route('/member')
+def member():
+    with open('templates/members.json', mode='rt', encoding='utf-8') as f:
+        members = json.load(f)
+    return render_template('member.html', members=members, title="Личная карточка")
+
+
 image = ['static/img/mars1.jpg',
-        'static/img/mars2.jpg',
+         'static/img/mars2.jpg',
          'static/img/mars3.jpg']
 
 

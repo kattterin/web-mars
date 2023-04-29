@@ -116,6 +116,19 @@ def addjob():
     return render_template('jobs.html', title='Добавление работы', form=form)
 
 
+@app.route('/jobs_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def jobs_delete(id):
+    db_sess = db_session.create_session()
+    jobs = db_sess.query(Jobs).filter(Jobs.id == id).first()
+    if jobs:
+        db_sess.delete(jobs)
+        db_sess.commit()
+    else:
+        abort(404)
+    return redirect('/')
+
+
 @app.route('/jobs/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_jobs(id):

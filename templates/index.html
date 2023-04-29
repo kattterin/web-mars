@@ -33,7 +33,7 @@
 
          </tbody>
             </table>
-        {% if current_user.is_authenticated and current_user == item.user %}
+        {% if current_user.is_authenticated and (current_user == item.user or current_user.id == 1)%}
         <div>
             <a href="/jobs/{{ item.id }}" class="btn btn-warning">
                 Изменить
@@ -47,7 +47,7 @@
         <br>
         {% if current_user.is_authenticated %}
             <div>
-                    <a href="/index" class="btn btn-warning">
+                    <a href="/addjob" class="btn btn-warning">
                         Добавить работу
                     </a>
                 </div>

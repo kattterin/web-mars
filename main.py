@@ -3,7 +3,7 @@ import json
 from flask import Flask, url_for, request, render_template, redirect, abort, make_response, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
-from data import db_session, jobs_api, users_resource, user_api
+from data import db_session, jobs_api, users_resource, user_api, jobs_resource
 from data.jobs import Jobs
 from forms.departments import DepartForm
 from data.users import User
@@ -32,6 +32,11 @@ api.add_resource(users_resource.UsersListResource, '/api/v2/users')
 
 # для одного объекта
 api.add_resource(users_resource.UsersResource, '/api/v2/users/<int:users_id>')
+
+api.add_resource(jobs_resource.JobsListResource, '/api/v2/jobs')
+
+# для одного объекта
+api.add_resource(jobs_resource.JobsResource, '/api/v2/jobs/<int:jobs_id>')
 
 
 @app.route('/member')

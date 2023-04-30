@@ -3,7 +3,7 @@ import json
 from flask import Flask, url_for, request, render_template, redirect, abort, make_response, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
-from data import db_session, jobs_api, users_resource
+from data import db_session, jobs_api, users_resource, user_api
 from data.jobs import Jobs
 from forms.departments import DepartForm
 from data.users import User
@@ -734,6 +734,8 @@ def jobs_create():
 if __name__ == '__main__':
     db_session.global_init("db/blogs.sqlite3")
     app.register_blueprint(jobs_api.blueprint)
+    app.register_blueprint(user_api.blueprint)
+
 
     # user_create()
     # jobs_create()
